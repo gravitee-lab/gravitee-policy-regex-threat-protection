@@ -1,0 +1,100 @@
+= Regex Threat Protection Policy
+
+ifdef::env-github[]
+image:https://ci.gravitee.io/buildStatus/icon?job=gravitee-io/gravitee-policy-regex-threat-protection/master["Build status", link="https://ci.gravitee.io/job/gravitee-io/job/gravitee-policy-regex-threat-protection/"]
+image:https://badges.gitter.im/Join Chat.svg["Gitter", link="https://gitter.im/gravitee-io/gravitee-io?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+endif::[]
+
+== Phase
+
+[cols="2*", options="header"]
+|===
+^|onRequest
+^|onRequestContent
+^.^| X
+^.^| X
+
+|===
+
+== Description
+
+The Regex Threat Protection Policy allows extracting information from a request (headers, path, query parameters, body payload) and evaluates that content against defined regular expressions.
+If any content matches the specified regular expression, the request will be considered a threat and rejected with a 400 BAD REQUEST.
+Inject processing report messages into request metrics for analytics.
+
+== Configuration
+
+|===
+|Property |Required |Description |Type| Default
+
+.^|regex
+^.^|X
+|Regex used to detect malicious injections. You can enable this regular expression on headers, path and body or add multiple Regex Threat Protection Policies with different regex depending on your needs.
+^.^|string
+|
+
+.^|caseSensitive
+^.^|
+|Perform case sensitive matching. *WARNING*: Please beware that enabling case sensitive matching may let pass some risky patterns such as ```DrOp TaBlE```.
+^.^|boolean
+^.^|false
+
+.^|checkHeaders
+^.^|
+|Evaluate regex on request headers.
+^.^|boolean
+^.^|true
+
+.^|checkPath
+^.^|
+|Evaluate regex on request path and query parameters.
+^.^|boolean
+^.^|true
+
+.^|checkBody
+^.^|
+|Evaluate regex on request body content.
+^.^|boolean
+^.^|true
+
+|===
+
+
+== Http Status Code
+
+|===
+|Code |Message
+
+.^| ```400```
+
+a| In case of:
+
+* Matching request headers
+* Matching request path or query parameters
+* Matching request body
+
+|===
+
+== Errors
+
+If you're looking to override the default response provided by the policy, you can do it
+thanks to the response templates feature. These templates must be define at the API level (see `Response Templates`
+from the `Proxy` menu).
+
+Here are the error keys send by this policy:
+
+[cols="2*", options="header"]
+|===
+^|Key
+^|Parameters
+
+.^|HEADER_THREAT_DETECTED
+^.^|-
+
+.^|PATH_THREAT_DETECTED
+^.^|-
+
+.^|BODY_THREAT_DETECTED
+^.^|-
+
+|===
